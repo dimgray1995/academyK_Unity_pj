@@ -3,7 +3,20 @@ guid: f4236e57b959b8e43b8b4e61f0253f1b
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - csvTableFile: {instanceID: 0}
+  - csvClassTableFile: {fileID: 4900000, guid: 52f54025cf281f44b9f4335e8923fbd9, type: 3}
+  - csvEffectTableFile: {fileID: 4900000, guid: f43c3122e03b98d4a83dc1379256bb60, type: 3}
+  - csvExpTableFile: {fileID: 4900000, guid: ee7a2912054ef2942a202757cc184963, type: 3}
+  - csvLvStUpTableFile: {fileID: 4900000, guid: 9d20ab85e9a3032429e7d06feedf8e59, type: 3}
+  - csvMonsterTableFile: {fileID: 4900000, guid: 9250134c1c0489845b81ec464219f046, type: 3}
+  - csvProjectileTableFile: {fileID: 4900000, guid: fe890300c24534f439ecf7e6de183017, type: 3}
+  - csvRiskTableFile: {fileID: 4900000, guid: 767d304c51d5bdf4cacfe5728866a370, type: 3}
+  - csvSkillTableFile: {fileID: 4900000, guid: cd4d34c28df74dd4db3d9eb469824535, type: 3}
+  - csvSpawnTableFile: {fileID: 4900000, guid: f5f95c1303d78dc4087ae0c2ef168338, type: 3}
+  - csvStageTableFile: {fileID: 4900000, guid: ce39a927b7ab29b458da131290ff1d9a, type: 3}
+  - csvStUpTableFile: {fileID: 4900000, guid: 46b4850e0cc1af848bc190fd7ebf854d, type: 3}
+  - csvWaveTableFile: {fileID: 4900000, guid: e4087a4389292c04a913cd1066528797, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
