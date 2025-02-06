@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 
 
+
 public class UIManager : MonoBehaviour
 {
     public TextMeshProUGUI classNameText;
@@ -17,9 +18,11 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI gotDmgText;
     public TextMeshProUGUI moveSpeedText;
     public GameObject[] skills;
+    public Image _image;
+    public Sprite sprite;
 
 
-
+    
 
     // Start is called before the first frame update
 
@@ -27,6 +30,7 @@ public class UIManager : MonoBehaviour
     //public GameObject[] skills; //한 번에 csv 파일 넣기
     void Start()
     {
+        
         //CSVDataReader.Instance. 싱글톤의 경우 직접 접근할 수 있다.
 
         //string warnig = CSVDataReader.Instance.ExpDic[28].ToString();
@@ -38,10 +42,17 @@ public class UIManager : MonoBehaviour
         //int charId = CSVDataReader.Instance.curCharID;
         int charId = CSVDataReader.Instance.ReturnId();
         
+        //pt = CSVDataReader.Instance.ImageDic[charId].image;
+        //_image.sprite = Resources.Load(CSVDataReader.Instance.ImageDic[charId].image)as Sprite;
+        //_image.sprite = pt.Split;
         ResetUI(charId);
-    
+        //GameObject.Find("Image").GetComponent<Image>().sprite = sprite;
+
+
+
     }
-    
+
+
     public void GoBattle()
     {
         CSVDataReader.Instance.MoveScene(sceneName.InGameSc);
@@ -61,6 +72,10 @@ public class UIManager : MonoBehaviour
         cdnPctText.text = CSVDataReader.Instance.TypeDic[id].cdnPct.ToString();
         gotDmgText.text = CSVDataReader.Instance.TypeDic[id].gotDmg.ToString();
         moveSpeedText.text = CSVDataReader.Instance.TypeDic[id].moveSpeed.ToString();
+        //_image.sprite = Resources.Load(CSVDataReader.Instance.ImageDic[charId].image, typeof(Sprite)) as Sprite;
+        Sprite a = Resources.Load<Sprite>("ch_01");
+        _image.sprite = a;
+        //GameObject.Find("Image").GetComponent<Image>().sprite = a;
 
         foreach (GameObject item in skills)
         {
