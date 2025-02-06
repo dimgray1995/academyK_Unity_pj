@@ -1,7 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.SearchService;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 /*public class CSVDataReader : MonoBehaviour
 {
@@ -54,10 +57,21 @@ public class TestClass
 
 }*/
 
+public enum sceneName//enum을 통한 씬 변경
+{
+    InGameSc,
+    MainDisplaySc,
+    SeletCHSc,
+}
+
 public class CSVDataReader : SingleTon<CSVDataReader>
 {
+    //public const string InGame = "InGame";//이런식으로 씬을 변경할 수 있다.
+
+
+
     #region SerializeField 입력받는 공간
-    [SerializeField] TextAsset csvTableFile;
+    //[SerializeField] TextAsset csvTableFile;
     [SerializeField] TextAsset csvClassTableFile;
     [SerializeField] TextAsset csvEffectTableFile;
     [SerializeField] TextAsset csvExpTableFile;
@@ -70,6 +84,7 @@ public class CSVDataReader : SingleTon<CSVDataReader>
     [SerializeField] TextAsset csvStageTableFile;
     [SerializeField] TextAsset csvStUpTableFile;
     [SerializeField] TextAsset csvWaveTableFile;
+    [SerializeField] TextAsset csvImageFile;
     #endregion
 
 
@@ -85,10 +100,19 @@ public class CSVDataReader : SingleTon<CSVDataReader>
     public Dictionary<int, StageClass> stageDic = new Dictionary<int, StageClass>();
     public Dictionary<int, StUPClass> StUpDic = new Dictionary<int, StUPClass>();
     public Dictionary<int, WaveClass> WaveDic = new Dictionary<int, WaveClass>();
+    public Dictionary<int, Sprite> ImageDic = new Dictionary<int, Sprite>();
     #endregion
+
+
+    // int curCharID = PlayerPrefs.GetInt("SelectCharID",1);
+    int curCharID;
+
 
     void Start()
     {
+        curCharID = PlayerPrefs.GetInt("CharId", 1);
+        //curCharID = PlayerPrefs.GetInt("SelectCharId");
+        //Debug.Log(curCharID);
         TypeDataRoad();
         ExpDataRoad();
         LvStUpDataRoad();
@@ -102,11 +126,115 @@ public class CSVDataReader : SingleTon<CSVDataReader>
         WaveDataRoad();
         //for (int i = 0; i < 10; i++) {
         //    Debug.Log(ExpDic[i].curExp.ToString());
-            //Debug.Log외 어떠한 값을 넣으려고 한다면
-           //int a = 딕셔너리 선언 변수[i].원하는 테이블을 로드하는 메소드에 parse를 넣는 변수명.tostring으로 간다.
-             //   }
+        //Debug.Log외 어떠한 값을 넣으려고 한다면
+        //int a = 딕셔너리 선언 변수[i].원하는 테이블을 로드하는 메소드에 parse를 넣는 변수명.tostring으로 간다.
+        //   }
+
+        //여기에 메인으로 이동해라 부분
+
+        //SceneManager.LoadScene(InGame);
+        //MoveScene(InGame);
+        // 이건 안됨 MoveScene(CSVDataReader.Instance.씬이름)
+
+        //Invoke("Test",3f);//해당 함수는 함수 실행 시 지연시간을 넣을 수 있다.
+        //MoveScene(sceneName.InGameSc);
+
+        //PlayerPrefs.SetInt("SelectCharID", 4);
+
+        //curCharID = PlayerPrefs.GetInt("SelectCharID", 1);
+
+        //플레이 펩으로 저장할 수 있는 인트형을 통해 레벨을 불러올 수 있다.
+
+        MoveScene(sceneName.InGameSc);
+        
+
+        //PlayerPrefs.DeleteAll();
+    }
+    public int ReturnId()
+    {
+        return curCharID;
     }
 
+    public int ReturnId(bool isLeft)
+    {
+        int _id = curCharID;
+
+        int dataCnt = TypeDic.Count;
+
+        if (isLeft)
+        {
+            _id--; // 1>작을 때 처리 안해놈
+            //연산(이전꺼 -1)
+            //PlayerPrefs.SetInt("CharId", 0);//뒷 숫자에는 연산한 값
+        }
+        else
+        {
+            _id++;// 4 < 클때 처리 안함
+           // PlayerPrefs.SetInt("CharId", 0);
+        }
+
+        if(_id == dataCnt+1)
+        {
+            _id = 1;
+        }
+        else if(_id == 0)
+        {
+            _id = 4;
+        }
+
+
+        PlayerPrefs.SetInt("ChartId",_id);
+        curCharID = _id;
+        return curCharID;
+    } 
+
+    IEnumerator ChangeScene(string _scene)
+    {
+        while (true)
+        {
+            yield return null;
+            //yield return new WaitUntil; //리소스 체크, 네트워크 체크를 끝내고 실행
+            break;
+        }
+        //yield return new WaitForSeconds(3f);
+
+        SceneManager.LoadScene(_scene);
+    }
+
+    public void MoveScene(sceneName sceneName)
+    {
+        string scene = "";
+        //SceneManager.LoadScene(sceneName);//enum 사용시 사용 불가
+        switch (sceneName)
+        {
+            case sceneName.InGameSc:
+                scene = "02_InGame";
+                //SceneManager.LoadScene("02_InGame");
+                break;
+            case sceneName.MainDisplaySc:
+                scene = "00_MainDisplay";
+                //SceneManager.LoadScene("00_MainDisplay");
+                break;
+            case sceneName.SeletCHSc:
+                scene = "01_SeletCh";
+                //SceneManager.LoadScene("01_SeletCh");
+                break;
+        }
+        IEnumerator _ChangeScene = ChangeScene(scene);
+        StartCoroutine(_ChangeScene);
+        StopCoroutine(_ChangeScene);
+        //StartCoroutine(ChangeScene(scene));
+        //StopCoroutine(ChangeScene(scene));
+    }
+
+    //void ImageCh()
+    //{
+    //    List<Dictionary<string, object>> ChList = CSVReader.Read(csvImageFile);
+
+    //    for (int i = 0; i < ChList.Count; i++) { 
+
+    //    }
+    //}
 
     void TypeDataRoad()
     {
@@ -115,7 +243,7 @@ public class CSVDataReader : SingleTon<CSVDataReader>
         for (int i = 0; i < typeList.Count; i++)
         {
             TypeClass typeData = new TypeClass();
-            int id = int.Parse(typeList[i].ToString());
+            int id = int.Parse(typeList[i]["id"].ToString());
             typeData.className = typeList[i]["className"].ToString();
             typeData.maxHp = float.Parse(typeList[i]["maxHp"].ToString());
             typeData.atkPwr = float.Parse(typeList[i]["atkPwr"].ToString());
@@ -144,7 +272,7 @@ public class CSVDataReader : SingleTon<CSVDataReader>
         for (int i = 0; i < expList.Count; i++)
         {
             ExpClass expData = new ExpClass();
-            int id = int.Parse(expList[i].ToString());
+            int id = int.Parse(expList[i]["lv"].ToString());
             expData.curExp = int.Parse(expList[i]["curExp"].ToString());
 
             ExpDic.Add(id, expData); ;
@@ -187,16 +315,7 @@ public class CSVDataReader : SingleTon<CSVDataReader>
         {
             LvStUpClass lvStUpData = new LvStUpClass();
 
-            int startLv = int.Parse(lvStList[i]["startLv"].ToString());
-
-            //if(startLv != 0 && startLv % 5 == 0)
-            //{
-            //    //stData.testBool = true;
-            //}
-            //else
-            //{
-            //    //stData.testBool - false;
-            //}
+            int startlv = int.Parse(lvStList[i]["id"].ToString());
             lvStUpData.maxHp = float.Parse(lvStList[i]["maxHp"].ToString());
             lvStUpData.atkPwr = float.Parse(lvStList[i]["atkPwr"].ToString());
             lvStUpData.criPrb = float.Parse(lvStList[i]["criPrb"].ToString());
@@ -204,7 +323,7 @@ public class CSVDataReader : SingleTon<CSVDataReader>
             lvStUpData.hpRcv = float.Parse(lvStList[i]["hpRcv"].ToString());
             lvStUpData.cdnPct = float.Parse(lvStList[i]["cdnPct"].ToString());
 
-            LvStUpDic.Add(startLv, lvStUpData);
+            LvStUpDic.Add(startlv, lvStUpData);
         }
     }
     void ProjectileDataRoad()
@@ -250,6 +369,15 @@ public class CSVDataReader : SingleTon<CSVDataReader>
 
         for (int i = 0; i < skillList.Count; i++)
         {
+
+            //if(startLv != 0 && startLv % 5 == 0)
+            //{
+            //    //stData.testBool = true;
+            //}
+            //else
+            //{
+            //    //stData.testBool - false;
+            //}
             SkillClass skillData = new SkillClass();
             int id = int.Parse(skillList[i]["id"].ToString());
             skillData.skillName = skillList[i]["skillName"].ToString();
@@ -297,7 +425,7 @@ public class CSVDataReader : SingleTon<CSVDataReader>
         for (int i = 0; i < stageList.Count; i++)
         {
             StageClass stageClass = new StageClass();
-            int id = int.Parse(stageList[i].ToString());
+            int id = int.Parse(stageList[i]["id"].ToString());
             stageClass.waveId_01 = int.Parse(stageList[i]["waveId_01"].ToString());
             stageClass.waveId_02 = int.Parse(stageList[i]["waveId_02"].ToString());
             stageClass.waveId_03 = int.Parse(stageList[i]["waveId_03"].ToString());
@@ -336,7 +464,7 @@ public class CSVDataReader : SingleTon<CSVDataReader>
         for (int i = 0; i < waveList.Count; i++)
         {
             WaveClass waveClass = new WaveClass();
-            int id = int.Parse(waveList[i].ToString());
+            int id = int.Parse(waveList[i]["id"].ToString());
             waveClass.waveType = int.Parse(waveList[i]["waveType"].ToString());
             waveClass.monId_01 = int.Parse(waveList[i]["monId_01"].ToString());
             waveClass.monId_02 = int.Parse(waveList[i]["monId_02"].ToString());
@@ -356,6 +484,13 @@ public class CSVDataReader : SingleTon<CSVDataReader>
     }
 }
 #region
+
+public class ImageClass
+{
+    public int id;
+    public Sprite image;
+
+}
 public class StUPClass
 {
     public int startLv;//강화 시작 레벨
@@ -370,6 +505,7 @@ public class StUPClass
 }
 public class LvStUpClass
 {
+    public int id;
     public float maxHp;//레벨업 시 증가하는 최대 체력 값
     public float atkPwr;//레벨업 시 증가하는 공격력 값
     public float criPrb;//5레벨부터 적용, 10레벨 증가할 때 증가하는 치명타 확률 값

@@ -97,6 +97,7 @@ public class CSVReader: MonoBehaviour
         }
         return list;
     }
+
 }
 
 /*public class CSVReader : MonoBehaviour

@@ -22,6 +22,15 @@ public class ButtonManager : MonoBehaviour
         SceneManager.LoadScene("MainDisplay");
     }
 
+    public void seletChNextButton()
+    {
+
+    }
+    public void seletChBackButton()
+    {
+
+    }
+
     public void GameExit()
     {
 #if UNITY_EDITOR
