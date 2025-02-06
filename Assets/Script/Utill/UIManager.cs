@@ -74,7 +74,7 @@ public class UIManager : MonoBehaviour
 
             int skillId = CSVDataReader.Instance.TypeDic[id].skill_01;
             string skillName = CSVDataReader.Instance.SkillDic[skillId].skillName;
-            TextMeshProUGUI _text = skills[len].transform.GetChild(1).GetComponent<TextMeshProUGUI>(); 
+            TextMeshProUGUI _text = skills[len].transform.GetChild(1).GetComponent<TextMeshProUGUI>(); //GetChild(1)로 엠티 그룹 안에 있는 제목, 값입력 되는 곳을 가지고 온다, 즉 , 0 --> 1 번째 순서, 그러니texttmp(1)을 가지고 오는 것
             _text.text = skillName;
             skills[len].SetActive(true);
             len++;

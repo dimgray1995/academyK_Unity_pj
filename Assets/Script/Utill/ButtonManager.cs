@@ -9,7 +9,7 @@ public class ButtonManager : MonoBehaviour
 
     public void StartButton()
     {
-        SceneManager.LoadScene("InGame");
+        SceneManager.LoadScene("02_InGame");
     }
 
     public void ReStartButton()
@@ -19,7 +19,7 @@ public class ButtonManager : MonoBehaviour
 
     public void GotoMain()
     {
-        SceneManager.LoadScene("MainDisplay");
+        SceneManager.LoadScene("00_MainDisplay");
     }
 
     public void seletChNextButton()
