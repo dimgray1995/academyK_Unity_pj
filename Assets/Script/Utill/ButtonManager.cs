@@ -9,6 +9,11 @@ public class ButtonManager : MonoBehaviour
 
     public void StartButton()
     {
+        SceneManager.LoadScene("01_SeletCh");
+    }
+
+    public void goBattle()
+    {
         SceneManager.LoadScene("02_InGame");
     }
 

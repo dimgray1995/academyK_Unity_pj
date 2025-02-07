@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 
 
@@ -18,8 +19,6 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI gotDmgText;
     public TextMeshProUGUI moveSpeedText;
     public GameObject[] skills;
-    public Image _image;
-    public Sprite sprite;
 
 
     
@@ -57,6 +56,10 @@ public class UIManager : MonoBehaviour
     {
         CSVDataReader.Instance.MoveScene(sceneName.InGameSc);
     }
+    //public void testbutton()
+    //{
+    //    SceneManager.sceneLoaded("02_InGame");
+    //}
 
     void ResetUI(int id)
     {
@@ -73,8 +76,7 @@ public class UIManager : MonoBehaviour
         gotDmgText.text = CSVDataReader.Instance.TypeDic[id].gotDmg.ToString();
         moveSpeedText.text = CSVDataReader.Instance.TypeDic[id].moveSpeed.ToString();
         //_image.sprite = Resources.Load(CSVDataReader.Instance.ImageDic[charId].image, typeof(Sprite)) as Sprite;
-        Sprite a = Resources.Load<Sprite>("ch_01");
-        _image.sprite = a;
+       
         //GameObject.Find("Image").GetComponent<Image>().sprite = a;
 
         foreach (GameObject item in skills)
@@ -91,6 +93,11 @@ public class UIManager : MonoBehaviour
             string skillName = CSVDataReader.Instance.SkillDic[skillId].skillName;
             TextMeshProUGUI _text = skills[len].transform.GetChild(1).GetComponent<TextMeshProUGUI>(); //GetChild(1)로 엠티 그룹 안에 있는 제목, 값입력 되는 곳을 가지고 온다, 즉 , 0 --> 1 번째 순서, 그러니texttmp(1)을 가지고 오는 것
             _text.text = skillName;
+
+            Image image = skills[len].transform.GetChild(2).GetComponent<Image>();
+            string skillIconName = CSVDataReader.Instance.SkillDic[skillId].iconName;
+            image.sprite = CSVDataReader.Instance.spriteData[skillIconName];
+
             skills[len].SetActive(true);
             len++;
         }
@@ -101,6 +108,9 @@ public class UIManager : MonoBehaviour
             string skillName = CSVDataReader.Instance.SkillDic[skillId].skillName;
             TextMeshProUGUI _text = skills[len].transform.GetChild(1).GetComponent<TextMeshProUGUI>();
             _text.text = skillName;
+            Image image = skills[len].transform.GetChild(2).GetComponent<Image>();
+            string skillIconName = CSVDataReader.Instance.SkillDic[skillId].iconName;
+            image.sprite = CSVDataReader.Instance.spriteData[skillIconName];
             skills[len].SetActive(true);
             len++;
         }
@@ -111,6 +121,9 @@ public class UIManager : MonoBehaviour
             string skillName = CSVDataReader.Instance.SkillDic[skillId].skillName;
             TextMeshProUGUI _text = skills[len].transform.GetChild(1).GetComponent<TextMeshProUGUI>();
             _text.text = skillName;
+            Image image = skills[len].transform.GetChild(2).GetComponent<Image>();
+            string skillIconName = CSVDataReader.Instance.SkillDic[skillId].iconName;
+            image.sprite = CSVDataReader.Instance.spriteData[skillIconName];
             skills[len].SetActive(true);
             len++;
         }
@@ -121,6 +134,9 @@ public class UIManager : MonoBehaviour
             string skillName = CSVDataReader.Instance.SkillDic[skillId].skillName;
             TextMeshProUGUI _text = skills[len].transform.GetChild(1).GetComponent<TextMeshProUGUI>();
             _text.text = skillName;
+            Image image = skills[len].transform.GetChild(2).GetComponent<Image>();
+            string skillIconName = CSVDataReader.Instance.SkillDic[skillId].iconName;
+            image.sprite = CSVDataReader.Instance.spriteData[skillIconName];
             skills[len].SetActive(true);
             len++;
         }
@@ -131,6 +147,9 @@ public class UIManager : MonoBehaviour
             string skillName = CSVDataReader.Instance.SkillDic[skillId].skillName;
             TextMeshProUGUI _text = skills[len].transform.GetChild(1).GetComponent<TextMeshProUGUI>();
             _text.text = skillName;
+            Image image = skills[len].transform.GetChild(2).GetComponent<Image>();
+            string skillIconName = CSVDataReader.Instance.SkillDic[skillId].iconName;
+            image.sprite = CSVDataReader.Instance.spriteData[skillIconName];
             skills[len].SetActive(true);
             len++;
         }
@@ -141,6 +160,9 @@ public class UIManager : MonoBehaviour
             string skillName = CSVDataReader.Instance.SkillDic[skillId].skillName;
             TextMeshProUGUI _text = skills[len].transform.GetChild(1).GetComponent<TextMeshProUGUI>();
             _text.text = skillName;
+            Image image = skills[len].transform.GetChild(2).GetComponent<Image>();
+            string skillIconName = CSVDataReader.Instance.SkillDic[skillId].iconName;
+            image.sprite = CSVDataReader.Instance.spriteData[skillIconName];
             skills[len].SetActive(true);
             len++;
         }
@@ -151,6 +173,9 @@ public class UIManager : MonoBehaviour
             string skillName = CSVDataReader.Instance.SkillDic[skillId].skillName;
             TextMeshProUGUI _text = skills[len].transform.GetChild(1).GetComponent<TextMeshProUGUI>();
             _text.text = skillName;
+            Image image = skills[len].transform.GetChild(2).GetComponent<Image>();
+            string skillIconName = CSVDataReader.Instance.SkillDic[skillId].iconName;
+            image.sprite = CSVDataReader.Instance.spriteData[skillIconName];
             skills[len].SetActive(true);
             len++;
         }
@@ -161,6 +186,9 @@ public class UIManager : MonoBehaviour
             string skillName = CSVDataReader.Instance.SkillDic[skillId].skillName;
             TextMeshProUGUI _text = skills[len].transform.GetChild(1).GetComponent<TextMeshProUGUI>();
             _text.text = skillName;
+            Image image = skills[len].transform.GetChild(2).GetComponent<Image>();
+            string skillIconName = CSVDataReader.Instance.SkillDic[skillId].iconName;
+            image.sprite = CSVDataReader.Instance.spriteData[skillIconName];
             skills[len].SetActive(true);
             len++;
         }
@@ -170,6 +198,11 @@ public class UIManager : MonoBehaviour
     {
         int charId = CSVDataReader.Instance.ReturnId(isLeftButton);
         ResetUI(charId);
+    }
+
+    public void GameStart()
+    {
+        CSVDataReader.Instance.MoveScene(sceneName.InGameSc);
     }
 
 }

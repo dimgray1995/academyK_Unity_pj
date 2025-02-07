@@ -1,53 +1,37 @@
 using UnityEngine;
 
-public class SingleTon<T> : MonoBehaviour where T : MonoBehaviour
+public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
-    protected static T _instance;
-    public static bool HasInstance => _instance != null;
-    public static T TryGetInstance() => HasInstance ? _instance : null;
-    public static T Current => _instance;
+    private static T instance;
 
-    /// <summary>
-    /// 싱글톤 디자인 패턴
-    /// </summary>
-    /// <value>인스턴스</value>
     public static T Instance
     {
         get
         {
-            if (_instance == null)
+            if (instance == null) // 1
             {
-                _instance = FindObjectOfType<T>();
-                if (_instance == null)
+                instance = (T)FindObjectOfType(typeof(T)); // 2
+
+                if (instance == null) // 3
                 {
-                    GameObject obj = new GameObject();
-                    obj.name = typeof(T).Name + "_AutoCreated";
-                    _instance = obj.AddComponent<T>();
+                    GameObject obj = new GameObject(typeof(T).Name, typeof(T));
+                    instance = obj.GetComponent<T>();
                 }
             }
-            return _instance;
+            return instance;
         }
     }
 
-    /// <summary>
-    /// Awake에서 인스턴스를 초기화합니다. 만약 awake를 override해서 사용해야 한다면 base.Awake()를 호출해야 합니다.
-    /// </summary>
-    protected virtual void Awake()
+    public void Awake()
     {
-        InitializeSingleton();
-    }
-
-    /// <summary>
-    /// 싱글톤을 초기화합니다.
-    /// </summary>
-    protected virtual void InitializeSingleton()
-    {
-        //게임이 실행중이 아니라면 종료합니다.
-        if (!Application.isPlaying)
+        if (transform.parent != null && transform.root != null) // 5
         {
-            return;
+            DontDestroyOnLoad(this.transform.root.gameObject);
+        }
+        else
+        {
+            DontDestroyOnLoad(this.gameObject); // 4
         }
 
-        _instance = this as T;
     }
 }

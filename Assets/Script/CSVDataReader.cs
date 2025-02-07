@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -63,7 +64,7 @@ public enum sceneName//enum을 통한 씬 변경
     SeletCHSc,
 }
 
-public class CSVDataReader : SingleTon<CSVDataReader>
+public class CSVDataReader : Singleton<CSVDataReader>
 {
     //public const string InGame = "InGame";//이런식으로 씬을 변경할 수 있다.
 
@@ -83,7 +84,7 @@ public class CSVDataReader : SingleTon<CSVDataReader>
     [SerializeField] TextAsset csvStageTableFile;
     [SerializeField] TextAsset csvStUpTableFile;
     [SerializeField] TextAsset csvWaveTableFile;
-    [SerializeField] TextAsset csvImageFile;
+    
     #endregion
 
 
@@ -99,12 +100,14 @@ public class CSVDataReader : SingleTon<CSVDataReader>
     public Dictionary<int, StageClass> stageDic = new Dictionary<int, StageClass>();
     public Dictionary<int, StUPClass> StUpDic = new Dictionary<int, StUPClass>();
     public Dictionary<int, WaveClass> WaveDic = new Dictionary<int, WaveClass>();
-    public Dictionary<int, ImageClass> ImageDic = new Dictionary<int, ImageClass>();
+    
+    public Dictionary<string, Sprite> spriteData = new Dictionary<string, Sprite>();
     #endregion
 
 
     // int curCharID = PlayerPrefs.GetInt("SelectCharID",1);
     int curCharID;
+    public int selectStageId = 1;//이 녀석은 스테이지 선택 기능이 들어가면 변경할 수 있는 기능이 필요.
 
 
     void Start()
@@ -112,6 +115,7 @@ public class CSVDataReader : SingleTon<CSVDataReader>
         curCharID = PlayerPrefs.GetInt("CharId", 1);
         //curCharID = PlayerPrefs.GetInt("SelectCharId");
         //Debug.Log(curCharID);
+        AllImageLoad();
         TypeDataRoad();
         ExpDataRoad();
         LvStUpDataRoad();
@@ -123,7 +127,8 @@ public class CSVDataReader : SingleTon<CSVDataReader>
         StageDataRoad();
         StUPDataRoad();
         WaveDataRoad();
-        ImageDataRoad();
+        
+
         //for (int i = 0; i < 10; i++) {
         //    Debug.Log(ExpDic[i].curExp.ToString());
         //Debug.Log외 어떠한 값을 넣으려고 한다면
@@ -140,6 +145,7 @@ public class CSVDataReader : SingleTon<CSVDataReader>
         //MoveScene(sceneName.InGameSc);
 
         //PlayerPrefs.SetInt("SelectCharID", 4);
+
 
         //curCharID = PlayerPrefs.GetInt("SelectCharID", 1);
 
@@ -207,16 +213,17 @@ public class CSVDataReader : SingleTon<CSVDataReader>
         //SceneManager.LoadScene(sceneName);//enum 사용시 사용 불가
         switch (sceneName)
         {
-            case sceneName.InGameSc:
-                scene = "02_InGame";
+            case sceneName.MainDisplaySc:
+                scene = "00_MainDisplay"; 
                 //SceneManager.LoadScene("02_InGame");
                 break;
-            case sceneName.MainDisplaySc:
-                scene = "00_MainDisplay";
+            case sceneName.SeletCHSc:
+                
+                scene = "01_SeletCh";
                 //SceneManager.LoadScene("00_MainDisplay");
                 break;
-            case sceneName.SeletCHSc:
-                scene = "01_SeletCh";
+            case sceneName.InGameSc:
+                scene = "02_InGame"; 
                 //SceneManager.LoadScene("01_SeletCh");
                 break;
         }
@@ -236,20 +243,16 @@ public class CSVDataReader : SingleTon<CSVDataReader>
     //    }
     //}
 
-    void ImageDataRoad()
-    {
-        List<Dictionary<string, object>> ImageList = CSVReader.Read(csvImageFile);
+      void AllImageLoad()
+      {
+        Sprite[] sprites = Resources.LoadAll<Sprite>("Image");
 
-        for (int i = 0; i < ImageList.Count; i++)
+        foreach (Sprite item in sprites)
         {
-            ImageClass _sprite = new ImageClass();
-            int id = int.Parse(ImageList[i]["id"].ToString());
-
-            _sprite.image = ImageList[i]["image"].ToString();
-
-            ImageDic.Add(id, _sprite);
+            spriteData.Add(item.name, item);
         }
-    }
+
+       }
         void TypeDataRoad()
         {
             List<Dictionary<string, object>> typeList = CSVReader.Read(csvClassTableFile);
@@ -411,6 +414,7 @@ public class CSVDataReader : SingleTon<CSVDataReader>
                 skillData.dmgPct_03 = float.Parse(skillList[i]["dmgPct_03"].ToString());
                 skillData.dmgPct_04 = float.Parse(skillList[i]["dmgPct_04"].ToString());
                 skillData.dmgPct_05 = float.Parse(skillList[i]["dmgPct_05"].ToString());
+                skillData.iconName = skillList[i]["iconName"].ToString();
 
                 SkillDic.Add(id, skillData);
             }
@@ -651,6 +655,7 @@ public class CSVDataReader : SingleTon<CSVDataReader>
         public float dmgPct_03;//스킬 데미지 퍼센트. 여러 타수의 공격 등에 사용
         public float dmgPct_04;//스킬 데미지 퍼센트. 여러 타수의 공격 등에 사용
         public float dmgPct_05;//스킬 데미지 퍼센트. 여러 타수의 공격 등에 사용
+        public string iconName;//스프라이트로 바로 받으면 함수의 실행 순서를 바꾸야한다, 읽지 못하는 경우사 생김, 스트링으로 받은 후 필요할 때마다 넣는다.
     }
 
 #endregion
